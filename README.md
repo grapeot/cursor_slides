@@ -1,19 +1,42 @@
 # HTML Slide Framework
 
-This is an HTML slide framework based on [Reveal.js](https://revealjs.com/) that supports dynamically loading standalone HTML files as slides while maintaining a unified style.
+This is an HTML slide framework based on [Reveal.js](https://revealjs.com/) that supports a modular approach to slide development with ES modules.
 
 ## Directory Structure
 
 ```
 slide-deck/
-├── index.html      # Main HTML file
+├── index.html           # Main HTML file
 ├── css/
-│   └── custom.css  # Custom styles
-└── slides/         # Standalone slide HTML files
-    ├── slide1.html
-    ├── slide2.html
-    └── slide3.html
+│   └── custom.css       # Custom styles
+├── js/
+│   ├── slideModule.js   # Slide module system core
+│   └── slides/          # Individual slide modules
+│       ├── slide1.js    # Simple text content
+│       ├── slide2.js    # Interactive content
+│       ├── slide3.js    # Progressive content
+│       ├── slide4.js    # Chart.js visualization
+│       ├── slide5.js    # Three.js 3D content
+│       └── slide6.js    # Interactive flowchart
+└── slides/              # Legacy static HTML files (for reference)
 ```
+
+## Key Features
+
+### ES Modules for Slides
+
+Each slide is now a JavaScript ES module with:
+
+1. **HTML Content** - Module exports HTML content as a string
+2. **Initialization Logic** - Module exports functions to initialize interactive elements
+3. **Cleanup Logic** - Module exports functions to clean up resources when navigating away
+
+### Benefits of the Module System
+
+1. **Isolation** - Each slide has its own scope, avoiding global variable conflicts
+2. **Maintainability** - Slides can be developed and edited independently
+3. **Simplified Context** - AI editors can work on one slide at a time with limited context
+4. **Better Error Handling** - Errors in one slide won't break the entire presentation
 
 ## Usage Instructions
 
@@ -33,100 +56,130 @@ npx http-server
 
 ### Adding New Slides
 
-1. Create a new HTML file in the `slides/` directory (e.g., `slide4.html`)
-2. Add a corresponding reference in the main `index.html` file by:
-   - Adding a new section element with an ID: `<section id="slide4"></section>`
-   - Adding a call to load the HTML in the script: `loadHTML('slides/slide4.html', 'slide4');`
+1. Create a new JavaScript module in the `js/slides/` directory (e.g., `slide7.js`)
+2. Implement the module interface:
 
-### Slide Content Format
+```javascript
+// HTML content for the slide
+export const html = `
+  <h2>Your Slide Title</h2>
+  <p>Your slide content</p>
+`;
 
-Slides use HTML format with full control over layout and styling:
+// Initialize function - called when slide becomes active
+export function initialize() {
+  console.log('Slide initialized');
+  // Your initialization code here
+}
 
-```html
-<h2>Slide Title</h2>
-<p>Slide content</p>
-<ul>
-  <li>Item 1</li>
-  <li>Item 2</li>
-  <li>Item 3</li>
-</ul>
-```
-
-### Custom Styling
-
-1. Modify the style variables and rules in the `css/custom.css` file:
-
-```css
-:root {
-  --main-color: #your-color;
-  /* Other variables... */
+// Cleanup function - called when navigating away from slide
+export function cleanup() {
+  console.log('Slide cleaned up');
+  // Your cleanup code here
 }
 ```
 
-### Exporting to PDF
-
-There are two ways to export your presentation to PDF:
-
-1. **Using Browser Print Function (Recommended)**:
-   - Add `?print-pdf` to the URL (e.g., `http://localhost:8000?print-pdf`)
-   - This will format your slides for PDF export
-   - Use Chrome/Edge browser's Print function (Ctrl+P / Cmd+P)
-   - Change destination to "Save as PDF"
-   - Make sure to set:
-     - Layout: Landscape
-     - Margins: None
-     - Background graphics: Enabled
-   - Click "Save" to export
-
-2. **Using PDF Export Plugin**:
-   - For more options, you can add the PDF export plugin to index.html:
+3. Add the slide ID to the `slideIds` array in `index.html`
+4. Add a corresponding section in the `index.html` file:
    ```html
-   <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.3.1/plugin/pdf-export/pdf-export.js"></script>
-   ```
-   - Update Reveal.initialize to include the plugin:
-   ```javascript
-   Reveal.initialize({
-     // ... other options
-     plugins: [ RevealPdfExport ]
-   });
+   <section id="slide7"></section>
    ```
 
-## Technical Notes
+### Slide Types
 
-### MIME Type Issue Solution
+The framework includes example implementations for different types of slides:
 
-This framework uses a custom AJAX loading method instead of Reveal.js plugins to avoid MIME type issues that commonly occur with CDNs. Many solutions were tried:
+#### Basic Text Content (slide1.js)
 
-1. **Problem**: Using `data-external-replace` with the external plugin results in error:
-   ```
-   The resource was blocked due to MIME type ("text/plain") mismatch (X-Content-Type-Options: nosniff)
-   ```
+Simple static HTML content with text, lists, etc.
 
-2. **Solution**: We implemented a custom slide loading mechanism using XMLHttpRequest instead of relying on plugins:
-   ```javascript
-   function loadHTML(url, targetId) {
-     var xhr = new XMLHttpRequest();
-     xhr.open('GET', url, true);
-     xhr.onreadystatechange = function() {
-       if (xhr.readyState === 4 && xhr.status === 200) {
-         document.getElementById(targetId).innerHTML = xhr.responseText;
-       }
-     };
-     xhr.send();
-   }
-   ```
-   
-3. **Alternative Solutions**:
-   - Self-host all plugin files (more complex setup)
-   - Use iframe-based inclusion (less optimal integration)
-   - Inline all slide content (loses modularity)
+#### Interactive Elements (slide2.js)
+
+Includes interactive elements with event listeners:
+- Click events to change colors
+- State management within the module
+
+#### Progressive Reveal (slide3.js)
+
+Uses Reveal.js fragments to progressively reveal content on clicks.
+
+#### Dynamic Charts (slide4.js)
+
+Utilizes Chart.js to create responsive, animated data visualizations:
+- Line charts with animations
+- Real-time data updates with button clicks
+- Proper cleanup of chart resources
+
+#### 3D Content (slide5.js)
+
+Integrates Three.js for interactive 3D elements:
+- Rotating 3D objects with custom materials
+- User-controlled camera with orbit controls
+- Efficient animation and resource management
+
+#### Custom Flowcharts (slide6.js)
+
+Creates elegant diagrams with custom styling:
+- Custom-built flowchart system with DOM manipulation
+- Professional aesthetics with drop shadows and hover effects
+- Responsive layout that adapts to window resizing
 
 ## Advanced Features
 
-Check out the [Reveal.js documentation](https://revealjs.com/documentation/) to learn about more features, such as:
+### Module Loading System
 
-- Slide transition animations
-- Vertical slides
-- Slide backgrounds
-- Speaker notes
-- PDF export 
+The slide module system handles:
+
+1. **Dynamic Module Loading** - ES modules are loaded asynchronously when needed
+2. **Content Rendering** - HTML content is rendered to the DOM
+3. **Lifecycle Management** - Initialize/cleanup functions are called at appropriate times
+4. **Error Handling** - Errors in one module won't crash the entire presentation
+
+### Exporting to PDF
+
+To export your presentation to PDF:
+
+1. Add `?print-pdf` to the URL (e.g., `http://localhost:8000?print-pdf`)
+2. Use Chrome/Edge browser's Print function (Ctrl+P / Cmd+P)
+3. Change destination to "Save as PDF"
+4. Make sure to set:
+   - Layout: Landscape
+   - Margins: None
+   - Background graphics: Enabled
+5. Click "Save" to export
+
+## Lessons Learned
+
+### Working with Dynamic Content in Reveal.js
+
+When incorporating interactive elements like charts, 3D content, and dynamic diagrams in Reveal.js presentations, we encountered several challenges and developed these solutions:
+
+1. **Script Loading Order**:
+   - **Problem**: Libraries like Chart.js and Three.js weren't available when slides initialized.
+   - **Solution**: Load all external libraries in the `<head>` section before any other script execution.
+
+2. **Initialization Timing**:
+   - **Problem**: Dynamic content wasn't displaying because it initialized before the slide was visible.
+   - **Solution**: Use Reveal.js events (`slidechanged`, `ready`) to trigger initialization when a slide becomes active.
+
+3. **JavaScript Scope Issues**:
+   - **Problem**: Variables from different slides were conflicting in the global scope.
+   - **Solution**: Use ES modules to create isolated scope for each slide's code.
+
+4. **Resource Management**:
+   - **Problem**: Resources not being properly cleaned up when navigating away from slides.
+   - **Solution**: Implement cleanup functions in each module to dispose of resources.
+
+5. **Independent Development**:
+   - **Problem**: Difficult to develop and edit slides independently.
+   - **Solution**: Modular system where each slide is a separate file with standardized interface.
+
+## Technical Notes
+
+Our ES module approach solves many common issues with Reveal.js presentations:
+
+1. **Independent Files**: Each slide is a separate module that can be edited independently
+2. **Scope Isolation**: Prevents naming conflicts and unexpected interactions
+3. **Clean Lifecycle**: Initialization and cleanup happen at appropriate times
+4. **Error Containment**: Problems in one slide won't break the entire presentation
+5. **Context Limitation**: Makes it easier for AI assistance to work on slides with manageable context 

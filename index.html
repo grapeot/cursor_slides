@@ -4,55 +4,168 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HTML Slide Presentation</title>
+  <!-- 预加载所有库 -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+  
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.3.1/dist/reveal.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.3.1/dist/theme/white.css" id="theme">
   <link rel="stylesheet" href="css/custom.css">
-  <!-- PDF export styles -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.3.1/css/print/pdf.css" media="print">
+  
+  <!-- 内联PDF样式 -->
+  <style media="print">
+    /* PDF导出样式 */
+    .reveal.print-pdf {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+    .reveal.print-pdf .slides {
+      position: static;
+      width: 100% !important;
+      height: auto !important;
+      display: block;
+      margin: 0 !important;
+      padding: 0 !important;
+      overflow: visible;
+    }
+    .reveal.print-pdf .slides > section {
+      display: block;
+      page-break-after: always;
+      position: relative;
+      width: 100% !important;
+      height: 100% !important;
+      min-height: 800px;
+      margin: 0 !important;
+      padding: 0 !important;
+      box-sizing: border-box !important;
+      overflow: visible;
+    }
+    .reveal.print-pdf .slides > section.stack {
+      margin: 0 !important;
+      padding: 0 !important;
+      page-break-after: avoid;
+      height: auto !important;
+      min-height: 0 !important;
+    }
+    .reveal.print-pdf .slides > section.present {
+      outline: none;
+      border: none;
+    }
+  </style>
+  
+  <style>
+    /* 确保画布和容器样式 */
+    canvas {
+      border: 1px dashed #ccc;
+    }
+    
+    #canvas-container, #flowchart-container {
+      min-height: 300px !important;
+      border: 1px solid #eee;
+      background-color: #fafafa;
+    }
+  </style>
 </head>
 <body>
   <div class="reveal">
     <div class="slides">
-      <!-- First slide (embedded) -->
+      <!-- 首页 -->
       <section>
         <h1>HTML Slide Presentation</h1>
         <p>Using Reveal.js Framework</p>
       </section>
       
-      <!-- Direct HTML inclusion to avoid plugin issues -->
+      <!-- 使用模块化系统加载幻灯片 -->
       <section id="slide1"></section>
       <section id="slide2"></section>
       <section id="slide3"></section>
+      <section id="slide4"></section>
+      <section id="slide5"></section>
+      <section id="slide6"></section>
     </div>
   </div>
 
+  <!-- 加载Reveal.js -->
   <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.3.1/dist/reveal.js"></script>
-  <script>
-    // Initialize Reveal.js
-    Reveal.initialize({
-      hash: true,
-      center: true
-    });
+  
+  <!-- 使用ES模块 -->
+  <script type="module">
+    // 导入模块系统
+    import { loadSlideModule, renderSlide, initializeSlide, cleanupSlide, preloadAllSlides } from './js/slideModule.js';
     
-    // Manual implementation to load HTML slides
-    document.addEventListener('DOMContentLoaded', function() {
-      // Function to load HTML content
-      function loadHTML(url, targetId) {
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', url, true);
-        xhr.onreadystatechange = function() {
-          if (xhr.readyState === 4 && xhr.status === 200) {
-            document.getElementById(targetId).innerHTML = xhr.responseText;
-          }
-        };
-        xhr.send();
-      }
+    // 幻灯片ID数组
+    const slideIds = ['slide1', 'slide2', 'slide3', 'slide4', 'slide5', 'slide6'];
+    
+    // 当前活动幻灯片
+    let currentSlideId = null;
+    
+    // 初始化Reveal.js
+    const revealConfig = {
+      hash: true,
+      center: true,
+      preloadIframes: false,
+      disableLayout: false,
+      history: true,
+      minScale: 0.2,
+      maxScale: 2.0
+    };
+    
+    // 初始化并加载所有幻灯片
+    async function initializePresentation() {
+      // 预加载所有幻灯片模块
+      await preloadAllSlides(slideIds);
       
-      // Load the slides
-      loadHTML('slides/slide1.html', 'slide1');
-      loadHTML('slides/slide2.html', 'slide2');
-      loadHTML('slides/slide3.html', 'slide3');
-    });
+      // 渲染所有幻灯片内容
+      slideIds.forEach(id => {
+        const slideElement = document.getElementById(id);
+        if (slideElement) {
+          renderSlide(id, slideElement);
+        }
+      });
+      
+      // 初始化Reveal.js
+      Reveal.initialize(revealConfig);
+      
+      // 设置Reveal.js事件监听器
+      setupRevealEventListeners();
+    }
+    
+    // 设置Reveal.js事件监听器
+    function setupRevealEventListeners() {
+      // Ready事件 - 当Reveal.js初始化完成时触发
+      Reveal.addEventListener('ready', event => {
+        if (event.currentSlide) {
+          const slideId = event.currentSlide.id;
+          if (slideId && slideIds.includes(slideId)) {
+            currentSlideId = slideId;
+            initializeSlide(slideId);
+          }
+        }
+      });
+      
+      // Slidechanged事件 - 当幻灯片变化时触发
+      Reveal.addEventListener('slidechanged', event => {
+        // 清理上一个幻灯片
+        if (currentSlideId) {
+          cleanupSlide(currentSlideId);
+        }
+        
+        // 初始化当前幻灯片
+        if (event.currentSlide) {
+          const slideId = event.currentSlide.id;
+          if (slideId && slideIds.includes(slideId)) {
+            currentSlideId = slideId;
+            initializeSlide(slideId);
+            console.log(`Slide changed to: ${slideId}`);
+          }
+        }
+      });
+    }
+    
+    // 当DOM加载完成后，初始化演示文稿
+    document.addEventListener('DOMContentLoaded', initializePresentation);
   </script>
 </body>
 </html> 
