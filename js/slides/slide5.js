@@ -1,13 +1,13 @@
 /**
- * 幻灯片5 - 带有Three.js 3D内容的幻灯片
+ * Slide 5 - Three.js 3D visualization
  */
 
-// 幻灯片的HTML内容
+// HTML content for the slide
 export const html = `
   <h2>3D Content</h2>
   <p>Interactive 3D visualization with Three.js</p>
   
-  <div id="canvas-container" style="width: 100%; height: 350px; border-radius: 8px; overflow: hidden; border: 2px solid #ddd; background-color: #f9f9f9;"></div>
+  <div id="canvas-container" style="width: 80%; height: 350px; margin: 20px auto; border-radius: 8px; overflow: hidden; background: #f9f9f9; border: 2px solid #ddd;"></div>
   
   <div style="text-align: center; margin-top: 20px;">
     <button id="resetCubeBtn" style="padding: 8px 16px; background: #5D8AA8; color: white; border: none; border-radius: 4px; cursor: pointer; margin-right: 10px;">
@@ -19,19 +19,19 @@ export const html = `
   </div>
 `;
 
-// Three.js变量
+// Three.js components
 let scene, camera, renderer, cube, controls;
 let animationId = null;
 let isRotating = true;
 
-// 初始化函数
+// Initialize function
 export function initialize() {
   console.log('Slide 5 initialized - Three.js');
   
-  // 初始化3D场景
+  // Initialize Three.js
   initThreeJS();
   
-  // 为按钮添加事件监听器
+  // Add event listeners for buttons
   const resetButton = document.getElementById('resetCubeBtn');
   if (resetButton) {
     resetButton.addEventListener('click', resetCube);
@@ -42,57 +42,63 @@ export function initialize() {
     toggleButton.addEventListener('click', toggleRotation);
   }
   
-  // 处理窗口大小变化
+  // Handle window resize
   window.addEventListener('resize', onWindowResize);
 }
 
-// 初始化Three.js
+// Initialize Three.js scene
 function initThreeJS() {
-  // 获取容器
+  // Get container
   const container = document.getElementById('canvas-container');
   if (!container) {
-    console.error('Cannot find canvas container');
+    console.error('Cannot find canvas container element');
     return;
   }
   
   try {
-    // 清空容器
+    // Check if Three.js is available
+    if (typeof THREE === 'undefined') {
+      console.error('Three.js library not loaded');
+      return;
+    }
+    
+    // Clear container
     container.innerHTML = '';
     
-    // 创建场景
+    // Create scene
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0xf5f5f5);
     
-    // 获取容器尺寸
+    // Get container dimensions
     const containerWidth = container.offsetWidth || 500;
     const containerHeight = container.offsetHeight || 350;
     
-    // 创建相机
+    // Create camera
     camera = new THREE.PerspectiveCamera(75, containerWidth / containerHeight, 0.1, 1000);
     camera.position.z = 5;
     
-    // 创建渲染器
+    // Create renderer
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(containerWidth, containerHeight);
     container.appendChild(renderer.domElement);
     
-    // 添加控制
+    // Add orbit controls if available
     if (typeof THREE.OrbitControls !== 'undefined') {
       controls = new THREE.OrbitControls(camera, renderer.domElement);
       controls.enableDamping = true;
       controls.dampingFactor = 0.05;
     } else {
-      console.warn('OrbitControls not found, using simple controls');
+      console.warn('OrbitControls not available, using fallback');
       controls = {
         update: function() {},
         reset: function() {}
       };
     }
     
-    // 创建立方体
+    // Create cube
     createCube();
     
-    // 开始动画循环
+    // Start animation loop
     if (animationId) {
       cancelAnimationFrame(animationId);
     }
@@ -104,24 +110,24 @@ function initThreeJS() {
   }
 }
 
-// 创建立方体
+// Create a cube with different colored faces
 function createCube() {
   const geometry = new THREE.BoxGeometry(2, 2, 2);
   
   const materials = [
-    new THREE.MeshBasicMaterial({ color: 0xff0000 }), // 红色
-    new THREE.MeshBasicMaterial({ color: 0x00ff00 }), // 绿色
-    new THREE.MeshBasicMaterial({ color: 0x0000ff }), // 蓝色
-    new THREE.MeshBasicMaterial({ color: 0xffff00 }), // 黄色
-    new THREE.MeshBasicMaterial({ color: 0xff00ff }), // 品红
-    new THREE.MeshBasicMaterial({ color: 0x00ffff })  // 青色
+    new THREE.MeshBasicMaterial({ color: 0xff0000 }), // Red
+    new THREE.MeshBasicMaterial({ color: 0x00ff00 }), // Green
+    new THREE.MeshBasicMaterial({ color: 0x0000ff }), // Blue
+    new THREE.MeshBasicMaterial({ color: 0xffff00 }), // Yellow
+    new THREE.MeshBasicMaterial({ color: 0xff00ff }), // Magenta
+    new THREE.MeshBasicMaterial({ color: 0x00ffff })  // Cyan
   ];
   
   cube = new THREE.Mesh(geometry, materials);
   scene.add(cube);
 }
 
-// 动画循环
+// Animation loop
 function animate() {
   animationId = requestAnimationFrame(animate);
   
@@ -130,14 +136,16 @@ function animate() {
     cube.rotation.y += 0.01;
   }
   
-  if (controls && controls.update) controls.update();
+  if (controls && typeof controls.update === 'function') {
+    controls.update();
+  }
   
   if (renderer && scene && camera) {
     renderer.render(scene, camera);
   }
 }
 
-// 处理窗口大小变化
+// Handle window resize
 function onWindowResize() {
   if (!camera || !renderer) return;
   
@@ -152,7 +160,7 @@ function onWindowResize() {
   renderer.setSize(width, height);
 }
 
-// 重置立方体视图
+// Reset cube position and rotation
 function resetCube() {
   if (!cube) return;
   
@@ -165,26 +173,29 @@ function resetCube() {
     camera.position.y = 0;
   }
   
-  if (controls && controls.reset) {
+  if (controls && typeof controls.reset === 'function') {
     controls.reset();
   }
-  
-  if (renderer && scene && camera) {
-    renderer.render(scene, camera);
-  }
 }
 
-// 切换立方体旋转
+// Toggle cube rotation
 function toggleRotation() {
   isRotating = !isRotating;
-  console.log(`Rotation ${isRotating ? 'enabled' : 'disabled'}`);
 }
 
-// 清理函数
+// Cleanup function
 export function cleanup() {
   console.log('Slide 5 cleaned up');
   
-  // 移除事件监听器
+  // Stop animation loop
+  if (animationId) {
+    cancelAnimationFrame(animationId);
+    animationId = null;
+  }
+  
+  // Remove event listeners
+  window.removeEventListener('resize', onWindowResize);
+  
   const resetButton = document.getElementById('resetCubeBtn');
   if (resetButton) {
     resetButton.removeEventListener('click', resetCube);
@@ -195,15 +206,7 @@ export function cleanup() {
     toggleButton.removeEventListener('click', toggleRotation);
   }
   
-  window.removeEventListener('resize', onWindowResize);
-  
-  // 停止动画循环
-  if (animationId) {
-    cancelAnimationFrame(animationId);
-    animationId = null;
-  }
-  
-  // 清理Three.js对象
+  // Dispose of Three.js resources
   if (cube) {
     scene.remove(cube);
     cube.geometry.dispose();

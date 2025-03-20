@@ -1,37 +1,51 @@
 /* Custom CSS applied to all slides */
 :root {
-  --main-color: #2c3e50;
-  --accent-color: #e74c3c;
-  --text-color: #333;
-  --background-color: #f8f9fa;
+  --main-bg-color: #f5f5f5;
+  --main-text-color: #333;
+  --highlight-color: #4285f4;
+  --accent-color: #ea4335;
+  --secondary-color: #fbbc05;
+  --tertiary-color: #34a853;
+  --code-bg-color: #272822;
+  --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   --font-family: 'Source Sans Pro', Helvetica, sans-serif;
+}
+
+body {
+  background: var(--main-bg-color);
+  color: var(--main-text-color);
+  font-family: var(--font-family);
 }
 
 .reveal {
   font-family: var(--font-family);
-  color: var(--text-color);
+  color: var(--main-text-color);
 }
 
 .reveal h1, 
 .reveal h2, 
 .reveal h3, 
 .reveal h4 {
-  color: var(--main-color);
   font-family: var(--font-family);
+  color: var(--highlight-color);
   margin-bottom: 0.5em;
 }
 
 .reveal h1 { font-size: 2.5em; }
 .reveal h2 { font-size: 1.8em; }
 .reveal h3 { font-size: 1.4em; }
+.reveal h4 { font-size: 1.2em; }
 
-.reveal strong {
-  color: var(--accent-color);
+.reveal p {
+  margin-bottom: 1em;
+  line-height: 1.5;
 }
 
 .reveal ul, 
 .reveal ol {
-  margin-left: 1em;
+  display: inline-block;
+  text-align: left;
+  margin: 0 0 0 1em;
 }
 
 .reveal li {
@@ -43,4 +57,161 @@
   padding: 0.2em 0.4em;
   border-radius: 3px;
   font-family: monospace;
+}
+
+/* Button styles */
+.reveal button {
+  background-color: var(--highlight-color);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.reveal button:hover {
+  background-color: #3b77db;
+}
+
+.reveal button:active {
+  background-color: #2c5bb9;
+}
+
+/* Canvas styling */
+.canvas-container {
+  width: 80%;
+  height: 400px;
+  margin: 20px auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #fff;
+  box-shadow: var(--card-shadow);
+}
+
+/* Card styling for content */
+.card {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px auto;
+  max-width: 80%;
+  box-shadow: var(--card-shadow);
+}
+
+/* Module-specific styles */
+
+/* For slide2 - Interactive elements */
+.color-demo {
+  padding: 20px;
+  border-radius: 8px;
+  margin: 15px auto;
+  max-width: 80%;
+  text-align: center;
+  transition: color 0.5s ease;
+}
+
+/* For slide3 - Progressive reveal */
+.fragment.highlight-current-blue {
+  opacity: 1;
+  visibility: inherit;
+}
+
+.fragment.highlight-current-blue.current-fragment {
+  color: var(--highlight-color);
+  font-weight: bold;
+}
+
+.bonus-content {
+  background-color: rgba(66, 133, 244, 0.1);
+  border-left: 4px solid var(--highlight-color);
+  padding: 10px 20px;
+  margin-top: 30px;
+  border-radius: 0 4px 4px 0;
+}
+
+/* For slide4 - Chart styling */
+.chart-container {
+  width: 80%;
+  height: 350px;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* For slide5 - Three.js content */
+#canvas-container {
+  width: 80%;
+  height: 350px;
+  margin: 20px auto;
+  position: relative;
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: var(--card-shadow);
+}
+
+.controls-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+/* For slide6 - Flowchart */
+.flowchart-container {
+  width: 80%;
+  height: 400px;
+  margin: 20px auto;
+  position: relative;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: var(--card-shadow);
+  padding: 20px;
+}
+
+.flowchart-node {
+  position: absolute;
+  background-color: white;
+  border: 2px solid var(--highlight-color);
+  border-radius: 8px;
+  padding: 10px 15px;
+  min-width: 100px;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  z-index: 10;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.flowchart-node:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.flowchart-connection {
+  position: absolute;
+  z-index: 5;
+}
+
+.flowchart-arrow {
+  fill: none;
+  stroke: var(--highlight-color);
+  stroke-width: 2;
+  marker-end: url(#arrowhead);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .canvas-container, 
+  .chart-container,
+  #canvas-container,
+  .flowchart-container {
+    width: 95%;
+    height: 300px;
+  }
+  
+  .card {
+    max-width: 95%;
+    padding: 15px;
+  }
 } 

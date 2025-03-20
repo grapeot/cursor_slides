@@ -1,6 +1,60 @@
-# HTML Slide Framework
+# AI-Friendly Slide Framework
 
-This is an HTML slide framework based on [Reveal.js](https://revealjs.com/) that supports a modular approach to slide development with ES modules.
+A modern approach to presentation slides using ES Modules and Reveal.js, specifically designed for AI-assisted development.
+
+## Designed for AI, Not Humans
+
+This framework represents a fundamental shift in presentation design philosophy. Unlike traditional slide frameworks that prioritize human-authored content, our architecture is specifically optimized for AI-generated presentations.
+
+### AI-First Design Philosophy
+
+Most presentation frameworks are designed with human developers in mind, prioritizing simplicity of authoring over technical rigor. Our approach inverts this paradigm:
+
+1. **AI-Optimized Architecture**: Each slide is an independent module, allowing AI systems to generate, modify, or enhance individual slides without needing to understand the entire presentation context.
+
+2. **Technical Rigor Over Authoring Simplicity**: While JavaScript modules might be more complex than Markdown for humans, they provide the structure and predictability that AI assistants need to generate robust, interactive content.
+
+3. **Evolution of Approach**: We initially experimented with a pure Markdown-based system, but encountered fundamental limitations with scope isolation and lifecycle management that prevented reliable AI-generated interactive elements.
+
+4. **Modularity for AI Context Management**: AI assistants operate more effectively when working within constrained context windows. Our one-slide-per-file approach ensures AI can focus on a single component at a time.
+
+5. **Standardized Interfaces**: The consistent export pattern (`html`, `initialize`, `cleanup`) creates a contract that AI systems can reliably implement, reducing errors and inconsistencies.
+
+In essence, this framework treats AI as the primary author, with humans serving as reviewers and integrators. This inversion of the traditional development workflow enables far more powerful and complex presentations to be created with minimal human intervention.
+
+## Why JavaScript Modules Instead of HTML?
+
+This framework takes a fundamental departure from traditional Reveal.js presentations by using JavaScript ES modules (.js files) instead of standalone HTML files for slides. Here's why this approach is superior:
+
+### 1. Encapsulation and Scope Isolation
+
+**Problem with HTML files**: When loading HTML fragments into a presentation, all JavaScript runs in the global scope, leading to variable name collisions, unexpected interactions, and hard-to-debug issues.
+
+**Solution with JS modules**: Each slide is contained in its own module with proper scope isolation. Variables and functions defined in one slide module cannot interfere with those in another, eliminating an entire class of bugs.
+
+### 2. Lifecycle Management
+
+**Problem with HTML files**: No clear way to initialize resources when a slide becomes active or clean them up when navigating away, often resulting in memory leaks, performance degradation, and visual artifacts.
+
+**Solution with JS modules**: Our module system provides explicit lifecycle hooks (`initialize` and `cleanup`), ensuring that each slide properly manages its own resources throughout the presentation.
+
+### 3. Simplified AI Development
+
+**Problem with HTML files**: When working with AI assistants, the context required to understand a large HTML presentation with embedded scripts becomes unwieldy and overwhelming.
+
+**Solution with JS modules**: Each module represents an isolated unit of functionality, making it much easier for AI assistants to work with individual slides without needing the entire context of the application.
+
+### 4. Error Containment
+
+**Problem with HTML files**: Errors in one slide's JavaScript can break the entire presentation, often in ways that are difficult to trace.
+
+**Solution with JS modules**: Errors are contained within individual modules, preventing a problem in one slide from crashing the entire presentation.
+
+### 5. Standardized Interface
+
+**Problem with HTML files**: Each slide might implement functionality in different ways with no consistency.
+
+**Solution with JS modules**: All slides follow the same interface pattern, making the codebase more maintainable and enabling automated tooling.
 
 ## Directory Structure
 
@@ -10,176 +64,145 @@ slide-deck/
 ├── css/
 │   └── custom.css       # Custom styles
 ├── js/
-│   ├── slideModule.js   # Slide module system core
+│   ├── slideModule.js   # Core module system
 │   └── slides/          # Individual slide modules
 │       ├── slide1.js    # Simple text content
 │       ├── slide2.js    # Interactive content
 │       ├── slide3.js    # Progressive content
 │       ├── slide4.js    # Chart.js visualization
 │       ├── slide5.js    # Three.js 3D content
-│       └── slide6.js    # Interactive flowchart
-└── slides/              # Legacy static HTML files (for reference)
+│       └── slide6.js    # Horizontal flowchart
+└── slides/              # Legacy static HTML (for reference)
 ```
 
-## Key Features
+## Standard Operating Procedures for AI
 
-### ES Modules for Slides
+When working with this modular slide framework, AI assistants should follow these guidelines:
 
-Each slide is now a JavaScript ES module with:
+### Creating a New Slide
 
-1. **HTML Content** - Module exports HTML content as a string
-2. **Initialization Logic** - Module exports functions to initialize interactive elements
-3. **Cleanup Logic** - Module exports functions to clean up resources when navigating away
+1. **Understand the module interface**:
+   ```javascript
+   export const html = `<slide content>`;
+   export function initialize() { /* setup code */ }
+   export function cleanup() { /* teardown code */ }
+   ```
 
-### Benefits of the Module System
+2. **Create the new JS module file** in the `js/slides/` directory with a semantic name (e.g., `productDemo.js`).
 
-1. **Isolation** - Each slide has its own scope, avoiding global variable conflicts
-2. **Maintainability** - Slides can be developed and edited independently
-3. **Simplified Context** - AI editors can work on one slide at a time with limited context
-4. **Better Error Handling** - Errors in one slide won't break the entire presentation
+3. **Focus on scope isolation**: Avoid global variables; instead, declare variables at module scope.
+
+4. **Implement proper cleanup**: Release all resources (event listeners, timers, WebGL contexts, etc.) in the cleanup function.
+
+5. **Add to index.html**: Add a corresponding empty section tag `<section id="productDemo"></section>` and update the `slideIds` array.
+
+### Modifying Existing Slides
+
+1. **Identify the correct module**: Find the right `.js` file in the `js/slides/` directory.
+
+2. **Preserve the module interface**: Keep the `html`, `initialize`, and `cleanup` exports.
+
+3. **Stay within the slide's scope**: Don't reference or modify variables from other slides.
+
+4. **Test independently**: Ensure the slide works in isolation as well as within the presentation.
+
+### Working with Interactive Elements
+
+1. **Add event listeners in the initialize function** and remove them in the cleanup function.
+
+2. **Use module-scoped variables** for state that needs to persist during the slide's lifetime.
+
+3. **Avoid global DOM selectors**: Use `getElementById` or constrain selectors to the slide's container.
+
+## Special Feature: Edge-to-Edge Flowchart Connections
+
+The flowchart in slide6.js demonstrates a key design principle: connecting arrows between nodes should start and end at the edges of elements rather than their centers.
+
+### Why Edge Connections Matter
+
+1. **Visual clarity**: Edge-to-edge connections look more professional and clearer than center-to-center connections.
+
+2. **Realistic representation**: Real flowcharts connect boxes at their edges, not their centers.
+
+3. **Better space utilization**: Edge connections allow for more compact layouts without visual overlap.
+
+### How Edge Connections Work
+
+In `slide6.js`, the `calculateConnectionPoints` function determines the optimal edge points for connections:
+
+```javascript
+function calculateConnectionPoints(fromNode, toNode) {
+  // Calculate half dimensions
+  const fromHalfWidth = fromNode.width / 2;
+  const fromHalfHeight = fromNode.height / 2;
+  // ...
+  
+  // Determine which edges to use based on relative positioning
+  if (fromNode.x < toNode.x) {
+    // From is to the left of To
+    fromPoint.x = fromNode.x + fromHalfWidth;  // Right edge of From
+    toPoint.x = toNode.x - toHalfWidth;  // Left edge of To
+  }
+  // ...
+}
+```
+
+This approach:
+1. Calculates node center positions based on their dimensions
+2. Determines the optimal exit and entry points based on relative node positions
+3. Creates connection paths that intelligently adjust based on layout
+4. Maintains clean visuals even when the presentation is resized
 
 ## Usage Instructions
 
 ### Running the Slides
 
-1. Use any HTTP server to host this directory, for example:
+1. Use any HTTP server to host this directory:
 
 ```bash
 # Using Python's HTTP server
 python -m http.server
 
-# Or using Node.js's http-server
+# Using Node.js http-server
 npx http-server
 ```
 
-2. Open `http://localhost:8000` (or appropriate port) in your browser
+2. Open the presentation in a browser (e.g., `http://localhost:8000`)
 
-### Adding New Slides
+### Adding a New Slide
 
-1. Create a new JavaScript module in the `js/slides/` directory (e.g., `slide7.js`)
-2. Implement the module interface:
+1. Create a new module file in `js/slides/`:
 
 ```javascript
-// HTML content for the slide
+// js/slides/newSlide.js
 export const html = `
-  <h2>Your Slide Title</h2>
-  <p>Your slide content</p>
+  <h2>My New Slide</h2>
+  <p>This is my new slide content.</p>
 `;
 
-// Initialize function - called when slide becomes active
 export function initialize() {
-  console.log('Slide initialized');
-  // Your initialization code here
+  console.log('New slide initialized');
 }
 
-// Cleanup function - called when navigating away from slide
 export function cleanup() {
-  console.log('Slide cleaned up');
-  // Your cleanup code here
+  console.log('New slide cleaned up');
 }
 ```
 
-3. Add the slide ID to the `slideIds` array in `index.html`
-4. Add a corresponding section in the `index.html` file:
-   ```html
-   <section id="slide7"></section>
-   ```
-
-### Slide Types
-
-The framework includes example implementations for different types of slides:
-
-#### Basic Text Content (slide1.js)
-
-Simple static HTML content with text, lists, etc.
-
-#### Interactive Elements (slide2.js)
-
-Includes interactive elements with event listeners:
-- Click events to change colors
-- State management within the module
-
-#### Progressive Reveal (slide3.js)
-
-Uses Reveal.js fragments to progressively reveal content on clicks.
-
-#### Dynamic Charts (slide4.js)
-
-Utilizes Chart.js to create responsive, animated data visualizations:
-- Line charts with animations
-- Real-time data updates with button clicks
-- Proper cleanup of chart resources
-
-#### 3D Content (slide5.js)
-
-Integrates Three.js for interactive 3D elements:
-- Rotating 3D objects with custom materials
-- User-controlled camera with orbit controls
-- Efficient animation and resource management
-
-#### Custom Flowcharts (slide6.js)
-
-Creates elegant diagrams with custom styling:
-- Custom-built flowchart system with DOM manipulation
-- Professional aesthetics with drop shadows and hover effects
-- Responsive layout that adapts to window resizing
-
-## Advanced Features
-
-### Module Loading System
-
-The slide module system handles:
-
-1. **Dynamic Module Loading** - ES modules are loaded asynchronously when needed
-2. **Content Rendering** - HTML content is rendered to the DOM
-3. **Lifecycle Management** - Initialize/cleanup functions are called at appropriate times
-4. **Error Handling** - Errors in one module won't crash the entire presentation
-
-### Exporting to PDF
-
-To export your presentation to PDF:
-
-1. Add `?print-pdf` to the URL (e.g., `http://localhost:8000?print-pdf`)
-2. Use Chrome/Edge browser's Print function (Ctrl+P / Cmd+P)
-3. Change destination to "Save as PDF"
-4. Make sure to set:
-   - Layout: Landscape
-   - Margins: None
-   - Background graphics: Enabled
-5. Click "Save" to export
+2. Update `index.html`:
+   - Add a new section: `<section id="newSlide"></section>`
+   - Add the ID to the slideIds array: `const slideIds = [..., 'newSlide'];`
 
 ## Lessons Learned
 
-### Working with Dynamic Content in Reveal.js
+The development of this framework taught us several important lessons:
 
-When incorporating interactive elements like charts, 3D content, and dynamic diagrams in Reveal.js presentations, we encountered several challenges and developed these solutions:
+1. **JavaScript scope matters**: Scope isolation is critical for complex presentations.
 
-1. **Script Loading Order**:
-   - **Problem**: Libraries like Chart.js and Three.js weren't available when slides initialized.
-   - **Solution**: Load all external libraries in the `<head>` section before any other script execution.
+2. **Lifecycle management is essential**: Proper initialization and cleanup prevent memory leaks and visual glitches.
 
-2. **Initialization Timing**:
-   - **Problem**: Dynamic content wasn't displaying because it initialized before the slide was visible.
-   - **Solution**: Use Reveal.js events (`slidechanged`, `ready`) to trigger initialization when a slide becomes active.
+3. **Edge-to-edge connections** create more professional-looking diagrams than center-to-center connections.
 
-3. **JavaScript Scope Issues**:
-   - **Problem**: Variables from different slides were conflicting in the global scope.
-   - **Solution**: Use ES modules to create isolated scope for each slide's code.
+4. **Modular design simplifies maintenance**: Individual slides can be developed, tested, and modified independently.
 
-4. **Resource Management**:
-   - **Problem**: Resources not being properly cleaned up when navigating away from slides.
-   - **Solution**: Implement cleanup functions in each module to dispose of resources.
-
-5. **Independent Development**:
-   - **Problem**: Difficult to develop and edit slides independently.
-   - **Solution**: Modular system where each slide is a separate file with standardized interface.
-
-## Technical Notes
-
-Our ES module approach solves many common issues with Reveal.js presentations:
-
-1. **Independent Files**: Each slide is a separate module that can be edited independently
-2. **Scope Isolation**: Prevents naming conflicts and unexpected interactions
-3. **Clean Lifecycle**: Initialization and cleanup happen at appropriate times
-4. **Error Containment**: Problems in one slide won't break the entire presentation
-5. **Context Limitation**: Makes it easier for AI assistance to work on slides with manageable context 
+5. **Standardized interfaces improve workflow**: Having a consistent pattern for all slides makes development more predictable.
