@@ -1,0 +1,46 @@
+/* Custom CSS applied to all slides */
+:root {
+  --main-color: #2c3e50;
+  --accent-color: #e74c3c;
+  --text-color: #333;
+  --background-color: #f8f9fa;
+  --font-family: 'Source Sans Pro', Helvetica, sans-serif;
+}
+
+.reveal {
+  font-family: var(--font-family);
+  color: var(--text-color);
+}
+
+.reveal h1, 
+.reveal h2, 
+.reveal h3, 
+.reveal h4 {
+  color: var(--main-color);
+  font-family: var(--font-family);
+  margin-bottom: 0.5em;
+}
+
+.reveal h1 { font-size: 2.5em; }
+.reveal h2 { font-size: 1.8em; }
+.reveal h3 { font-size: 1.4em; }
+
+.reveal strong {
+  color: var(--accent-color);
+}
+
+.reveal ul, 
+.reveal ol {
+  margin-left: 1em;
+}
+
+.reveal li {
+  margin: 0.5em 0;
+}
+
+.reveal code {
+  background-color: #f0f0f0;
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  font-family: monospace;
+} 

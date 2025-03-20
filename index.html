@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTML Slide Presentation</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.3.1/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.3.1/dist/theme/white.css" id="theme">
+  <link rel="stylesheet" href="css/custom.css">
+  <!-- PDF export styles -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.3.1/css/print/pdf.css" media="print">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+      <!-- First slide (embedded) -->
+      <section>
+        <h1>HTML Slide Presentation</h1>
+        <p>Using Reveal.js Framework</p>
+      </section>
+      
+      <!-- Direct HTML inclusion to avoid plugin issues -->
+      <section id="slide1"></section>
+      <section id="slide2"></section>
+      <section id="slide3"></section>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.3.1/dist/reveal.js"></script>
+  <script>
+    // Initialize Reveal.js
+    Reveal.initialize({
+      hash: true,
+      center: true
+    });
+    
+    // Manual implementation to load HTML slides
+    document.addEventListener('DOMContentLoaded', function() {
+      // Function to load HTML content
+      function loadHTML(url, targetId) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            document.getElementById(targetId).innerHTML = xhr.responseText;
+          }
+        };
+        xhr.send();
+      }
+      
+      // Load the slides
+      loadHTML('slides/slide1.html', 'slide1');
+      loadHTML('slides/slide2.html', 'slide2');
+      loadHTML('slides/slide3.html', 'slide3');
+    });
+  </script>
+</body>
+</html> 
