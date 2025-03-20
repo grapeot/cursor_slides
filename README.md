@@ -2,6 +2,8 @@
 
 A modern approach to presentation slides using ES Modules and Reveal.js, specifically designed for AI-assisted development.
 
+For a live demo, check out [this page](https://yage.ai/slides/).
+
 ## Designed for AI, Not Humans
 
 This framework represents a fundamental shift in presentation design philosophy. Unlike traditional slide frameworks that prioritize human-authored content, our architecture is specifically optimized for AI-generated presentations.
