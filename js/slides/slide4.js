@@ -1,8 +1,8 @@
 /**
- * 幻灯片4 - 带有Chart.js图表的内容
+ * Slide 4 - Content with Chart.js Visualization
  */
 
-// 幻灯片的HTML内容
+// HTML content of the slide
 export const html = `
   <h2>Dynamic Charts</h2>
   <p>Interactive data visualization with Chart.js</p>
@@ -18,119 +18,120 @@ export const html = `
   </div>
 `;
 
-// 图表实例
-let chartInstance = null;
+// Chart instance
+let myChart = null;
 
-// 初始化函数
+// Initialization function
 export function initialize() {
-  console.log('Slide 4 initialized - Chart.js');
+  console.log('Slide 4 initialized');
+  
+  // Initialize the chart
   initializeChart();
   
-  // 添加更新按钮的事件监听器
-  const updateButton = document.getElementById('updateChartBtn');
-  if (updateButton) {
-    updateButton.addEventListener('click', updateChartData);
-  }
+  // Add event listener to the update button
+  document.getElementById('updateChartBtn').addEventListener('click', updateChartData);
 }
 
-// 初始化图表
+// Function to initialize the chart
 function initializeChart() {
-  const ctx = document.getElementById('myChart');
-  if (!ctx) {
-    console.error('Cannot find chart canvas element');
-    return;
-  }
+  // Get the chart canvas element
+  const ctx = document.getElementById('myChart').getContext('2d');
   
-  // 如果已存在图表实例，先销毁它
-  if (chartInstance) {
-    chartInstance.destroy();
-  }
+  // Initial data for the chart
+  const data = {
+    labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+    datasets: [{
+      label: 'Dataset 1',
+      backgroundColor: 'rgba(93, 138, 168, 0.2)',
+      borderColor: 'rgba(93, 138, 168, 1)',
+      borderWidth: 2,
+      data: [12, 19, 3, 5, 2, 3],
+      fill: true,
+      tension: 0.4
+    }, {
+      label: 'Dataset 2',
+      backgroundColor: 'rgba(255, 99, 132, 0.2)',
+      borderColor: 'rgba(255, 99, 132, 1)',
+      borderWidth: 2,
+      data: [7, 11, 5, 8, 3, 7],
+      fill: true,
+      tension: 0.4
+    }]
+  };
   
-  try {
-    // 生成随机数据
-    const data1 = Array.from({length: 6}, () => Math.floor(Math.random() * 30));
-    const data2 = Array.from({length: 6}, () => Math.floor(Math.random() * 30));
-    
-    // 创建新图表
-    chartInstance = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-        datasets: [{
-          label: 'Sales 2023',
-          data: data1,
-          borderWidth: 3,
-          borderColor: 'rgb(75, 192, 192)',
-          backgroundColor: 'rgba(75, 192, 192, 0.2)',
-          tension: 0.3
-        }, {
-          label: 'Sales 2024',
-          data: data2,
-          borderWidth: 3,
-          borderColor: 'rgb(255, 99, 132)',
-          backgroundColor: 'rgba(255, 99, 132, 0.2)',
-          tension: 0.3
-        }]
-      },
-      options: {
-        animation: {
-          duration: 2000,
-          easing: 'easeOutQuart'
+  // Chart configuration
+  const config = {
+    type: 'line',
+    data: data,
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Chart.js Example'
         },
-        scales: {
-          y: {
-            beginAtZero: true
-          }
-        },
-        responsive: true,
-        maintainAspectRatio: false,
-        interaction: {
+        tooltip: {
           mode: 'index',
           intersect: false
+        },
+      },
+      hover: {
+        mode: 'nearest',
+        intersect: true
+      },
+      scales: {
+        x: {
+          display: true,
+          title: {
+            display: true,
+            text: 'Month'
+          }
+        },
+        y: {
+          display: true,
+          title: {
+            display: true,
+            text: 'Value'
+          }
         }
       }
-    });
-    
-    console.log('Chart initialized successfully');
-  } catch (e) {
-    console.error('Chart initialization error:', e);
-  }
-}
-
-// 更新图表数据
-function updateChartData() {
-  if (!chartInstance) {
-    console.warn('No chart instance to update, initializing new chart');
-    initializeChart();
-    return;
-  }
+    }
+  };
   
-  try {
-    // 生成新的随机数据
-    chartInstance.data.datasets[0].data = Array.from({length: 6}, () => Math.floor(Math.random() * 30));
-    chartInstance.data.datasets[1].data = Array.from({length: 6}, () => Math.floor(Math.random() * 30));
-    
-    // 更新图表
-    chartInstance.update();
-    console.log('Chart data updated');
-  } catch (e) {
-    console.error('Error updating chart:', e);
-  }
+  // Create the chart
+  myChart = new Chart(ctx, config);
 }
 
-// 清理函数
+// Function to update the chart data
+function updateChartData() {
+  // Generate new random data
+  const newData1 = Array.from({length: 6}, () => Math.floor(Math.random() * 20) + 1);
+  const newData2 = Array.from({length: 6}, () => Math.floor(Math.random() * 20) + 1);
+  
+  // Update the chart datasets
+  myChart.data.datasets[0].data = newData1;
+  myChart.data.datasets[1].data = newData2;
+  
+  // Apply a random animation duration
+  myChart.options.animation = {
+    duration: 800 + Math.random() * 1200
+  };
+  
+  // Update the chart
+  myChart.update();
+}
+
+// Cleanup function
 export function cleanup() {
   console.log('Slide 4 cleaned up');
   
-  // 移除更新按钮的事件监听器
-  const updateButton = document.getElementById('updateChartBtn');
-  if (updateButton) {
-    updateButton.removeEventListener('click', updateChartData);
-  }
+  // Remove event listener
+  document.getElementById('updateChartBtn').removeEventListener('click', updateChartData);
   
-  // 销毁图表
-  if (chartInstance) {
-    chartInstance.destroy();
-    chartInstance = null;
+  // Destroy the chart to prevent memory leaks
+  if (myChart) {
+    myChart.destroy();
+    myChart = null;
   }
 } 

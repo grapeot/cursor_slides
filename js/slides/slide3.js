@@ -1,27 +1,44 @@
 /**
- * 幻灯片3 - 带有渐进展示的内容
+ * Slide 3 - Why JavaScript Modules
  */
 
-// 幻灯片的HTML内容
+// HTML content of the slide
 export const html = `
-  <h2>Third Slide with Progressive Reveal</h2>
-  <ul>
-    <li class="fragment">This item appears on click</li>
-    <li class="fragment">This item appears second</li>
-    <li class="fragment">This item appears third</li>
-  </ul>
+  <h2>Why JavaScript Modules?</h2>
   
-  <div class="fragment" style="margin-top: 20px; padding: 10px; background-color: #f0f0f0; border-radius: 4px;">
-    <p>This is a bonus content block that appears at the end!</p>
+  <div style="display: flex; justify-content: space-between; margin-top: 30px;">
+    <div style="flex: 1; margin-right: 20px;">
+      <h3 class="fragment" style="color: #4a86e8;">Problem with HTML files</h3>
+      <ul style="font-size: 0.7em;">
+        <li class="fragment">Global scope leads to variable collisions</li>
+        <li class="fragment">No clear lifecycle management</li>
+        <li class="fragment">Difficult for AI to manage large context</li>
+        <li class="fragment">Errors in one slide can break everything</li>
+      </ul>
+    </div>
+    
+    <div style="flex: 1;">
+      <h3 class="fragment" style="color: #4a86e8;">Solution with JS modules</h3>
+      <ul style="font-size: 0.7em;">
+        <li class="fragment">Each slide has proper scope isolation</li>
+        <li class="fragment">Explicit initialize() and cleanup() hooks</li>
+        <li class="fragment">Each module is an isolated unit for AI</li>
+        <li class="fragment">Errors are contained within individual modules</li>
+      </ul>
+    </div>
+  </div>
+  
+  <div class="fragment" style="margin-top: 30px; padding: 15px; background-color: #f8f9fa; border-radius: 8px; border-left: 4px solid #4a86e8;">
+    <p>Experience this framework and contribute at: <a href="https://github.com/grapeot/cursor_slides" target="_blank">https://github.com/grapeot/cursor_slides</a></p>
   </div>
 `;
 
-// 初始化函数
+// Initialization function
 export function initialize() {
   console.log('Slide 3 initialized');
 }
 
-// 清理函数
+// Cleanup function
 export function cleanup() {
   console.log('Slide 3 cleaned up');
 } 

@@ -1,24 +1,27 @@
 /**
- * 幻灯片1 - 简单文本内容
+ * Slide 1 - AI-First Design Philosophy
  */
 
-// 幻灯片的HTML内容
+// HTML content of the slide
 export const html = `
-  <h2>First Slide</h2>
-  <p>This is a standalone module file as first slide content</p>
-  <ul>
-    <li>Point 1</li>
-    <li>Point 2</li>
-    <li>Point 3</li>
-  </ul>
+  <h2>Design Philosophy</h2>
+  <div>
+    <h3>Inverting Traditional Presentation Design</h3>
+    <p>Our approach optimizes for AI-assisted generation rather than human authoring</p>
+    <ul class="fragment" style="margin-top: -10px;">
+      <li>Focus on technical rigor and predictability</li>
+      <li>Each slide is a self-contained component</li>
+      <li>Modular architecture for better AI context management</li>
+    </ul>
+  </div>
 `;
 
-// 初始化函数 - 这个简单幻灯片不需要特殊初始化
+// Initialization function - no special initialization needed for this simple slide
 export function initialize() {
   console.log('Slide 1 initialized');
 }
 
-// 清理函数 - 这个简单幻灯片不需要特殊清理
+// Cleanup function - no special cleanup needed for this simple slide
 export function cleanup() {
   console.log('Slide 1 cleaned up');
 } 

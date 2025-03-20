@@ -2,6 +2,10 @@
  * Slide 5 - Three.js 3D visualization
  */
 
+// Import Three.js modules
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
 // HTML content for the slide
 export const html = `
   <h2>3D Content</h2>
@@ -56,12 +60,6 @@ function initThreeJS() {
   }
   
   try {
-    // Check if Three.js is available
-    if (typeof THREE === 'undefined') {
-      console.error('Three.js library not loaded');
-      return;
-    }
-    
     // Clear container
     container.innerHTML = '';
     
@@ -82,18 +80,10 @@ function initThreeJS() {
     renderer.setSize(containerWidth, containerHeight);
     container.appendChild(renderer.domElement);
     
-    // Add orbit controls if available
-    if (typeof THREE.OrbitControls !== 'undefined') {
-      controls = new THREE.OrbitControls(camera, renderer.domElement);
-      controls.enableDamping = true;
-      controls.dampingFactor = 0.05;
-    } else {
-      console.warn('OrbitControls not available, using fallback');
-      controls = {
-        update: function() {},
-        reset: function() {}
-      };
-    }
+    // Add orbit controls
+    controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
     
     // Create cube
     createCube();
@@ -136,7 +126,7 @@ function animate() {
     cube.rotation.y += 0.01;
   }
   
-  if (controls && typeof controls.update === 'function') {
+  if (controls) {
     controls.update();
   }
   
@@ -173,7 +163,7 @@ function resetCube() {
     camera.position.y = 0;
   }
   
-  if (controls && typeof controls.reset === 'function') {
+  if (controls) {
     controls.reset();
   }
 }
@@ -210,7 +200,11 @@ export function cleanup() {
   if (cube) {
     scene.remove(cube);
     cube.geometry.dispose();
-    cube.material.forEach(material => material.dispose());
+    if (Array.isArray(cube.material)) {
+      cube.material.forEach(material => material.dispose());
+    } else if (cube.material) {
+      cube.material.dispose();
+    }
   }
   
   if (renderer) {

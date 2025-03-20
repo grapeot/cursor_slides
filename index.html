@@ -3,12 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HTML Slide Presentation</title>
+  <title>AI-Friendly Slide Framework</title>
   
   <!-- Load required libraries -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
   
   <!-- Reveal.js styles -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.3.1/dist/reveal.css">
@@ -61,8 +67,11 @@
     <div class="slides">
       <!-- Title Slide -->
       <section>
-        <h1>HTML Slide Presentation</h1>
+        <h1>AI-Friendly Slide Framework</h1>
         <p>Using Reveal.js with ES Modules</p>
+        <p style="margin-top: 30px;">
+          <a href="https://github.com/grapeot/cursor_slides" target="_blank">https://github.com/grapeot/cursor_slides</a>
+        </p>
       </section>
       
       <!-- Slide 1 - Simple text content -->

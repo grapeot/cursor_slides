@@ -1,55 +1,78 @@
 /**
- * 幻灯片2 - 带有简单交互的内容
+ * Slide 2 - AI-Optimized Architecture
  */
 
-// 幻灯片的HTML内容
+// HTML content of the slide
 export const html = `
-  <h2>Second Slide</h2>
-  <p>Content for the second slide with interactive elements</p>
+  <h2>AI-Optimized Architecture</h2>
   
-  <div style="color: blue; margin-bottom: 20px">Click the button below to change this text color</div>
+  <ul>
+    <li class="highlight-item" style="color: #333; transition: color 0.3s;">Independent modules with proper scope isolation</li>
+    <li class="highlight-item" style="color: #333; transition: color 0.3s;">Explicit lifecycle management (initialize & cleanup)</li>
+    <li class="highlight-item" style="color: #333; transition: color 0.3s;">Technical rigor over authoring simplicity</li>
+    <li class="highlight-item" style="color: #333; transition: color 0.3s;">Predictable interfaces for AI-generated content</li>
+  </ul>
   
-  <button id="colorButton" style="padding: 8px 16px; background: #5D8AA8; color: white; border: none; border-radius: 4px; cursor: pointer;">
-    Change Color
-  </button>
+  <div style="margin-top: 30px;">
+    <button id="highlightButton" style="padding: 10px 20px; background: #4a86e8; color: white; border: none; border-radius: 4px; cursor: pointer;">
+      Highlight Key Points
+    </button>
+  </div>
 `;
 
-// 当前颜色索引
-let colorIndex = 0;
+// Current highlight index
+let highlightIndex = -1;
 
-// 颜色数组
-const colors = ['blue', 'red', 'green', 'purple', 'orange'];
+// Color constants
+const HIGHLIGHT_COLOR = '#4a86e8';
+const DEFAULT_COLOR = '#333';
 
-// 初始化函数 - 设置按钮点击事件
+// Initialization function - setup button click event
 export function initialize() {
   console.log('Slide 2 initialized');
   
-  // 获取按钮并添加事件监听器
-  const button = document.getElementById('colorButton');
+  // Get button and add event listener
+  const button = document.getElementById('highlightButton');
   if (button) {
-    button.addEventListener('click', changeColor);
+    button.addEventListener('click', highlightNextItem);
   }
 }
 
-// 颜色变化处理函数
-function changeColor() {
-  // 更新颜色索引
-  colorIndex = (colorIndex + 1) % colors.length;
+// Highlight the next item
+function highlightNextItem() {
+  // Get all items that can be highlighted
+  const items = document.querySelectorAll('.highlight-item');
   
-  // 获取文本元素并更改颜色
-  const textElement = document.querySelector('div[style*="color"]');
-  if (textElement) {
-    textElement.style.color = colors[colorIndex];
+  // Reset the previous highlighted item to default color
+  if (highlightIndex >= 0 && highlightIndex < items.length) {
+    items[highlightIndex].style.color = DEFAULT_COLOR;
+  }
+  
+  // Update index and loop
+  highlightIndex = (highlightIndex + 1) % items.length;
+  
+  // Highlight current item
+  if (highlightIndex < items.length) {
+    items[highlightIndex].style.color = HIGHLIGHT_COLOR;
   }
 }
 
-// 清理函数 - 移除事件监听器
+// Cleanup function - remove event listener
 export function cleanup() {
   console.log('Slide 2 cleaned up');
   
-  // 移除事件监听器
-  const button = document.getElementById('colorButton');
+  // Remove event listener
+  const button = document.getElementById('highlightButton');
   if (button) {
-    button.removeEventListener('click', changeColor);
+    button.removeEventListener('click', highlightNextItem);
   }
+  
+  // Reset all highlights
+  const items = document.querySelectorAll('.highlight-item');
+  items.forEach(item => {
+    item.style.color = DEFAULT_COLOR;
+  });
+  
+  // Reset index
+  highlightIndex = -1;
 } 
