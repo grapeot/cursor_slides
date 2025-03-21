@@ -16,6 +16,10 @@ export const html = `
       Update Data
     </button>
   </div>
+
+  <aside class="notes">
+    This slide showcases how we can integrate powerful data visualization libraries like Chart.js into our presentation framework. The chart displays two datasets with a smooth line visualization. During the presentation, click the "Update Data" button to demonstrate how the chart can be dynamically updated with new random values. This illustrates how our framework can handle complex third-party libraries and interactive elements while maintaining proper initialization and cleanup. Note how the slide module properly manages the chart instance lifecycle.
+  </aside>
 `;
 
 // Chart instance

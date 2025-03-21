@@ -64,6 +64,68 @@ slides/
 
 5. **Add to index.html**: Add a corresponding empty section tag `<section id="productDemo"></section>` and update the `slideIds` array.
 
+### Working with Speaker Notes
+
+Speaker notes are private notes visible only to the presenter in speaker view. They help provide context, talking points, and additional information without cluttering the slide for the audience.
+
+1. **Adding Speaker Notes to a Slide**:
+   
+   Add an `<aside>` element with the class `notes` within your slide's HTML template:
+   
+   ```javascript
+   export const html = `
+     <h2>Slide Title</h2>
+     <ul>
+       <li>Point 1</li>
+       <li>Point 2</li>
+       <li>Point 3</li>
+     </ul>
+     
+     <aside class="notes">
+       This slide covers the key aspects of our approach.
+       - Emphasize the importance of Point 2
+       - If there are questions about Point 3, mention that we'll cover this in detail later
+       - This information is only visible to the presenter
+     </aside>
+   `;
+   ```
+
+2. **Enabling Speaker Mode**:
+   
+   Speaker mode requires the notes plugin to be enabled in the index.html file. Make sure the following additions are present:
+   
+   ```html
+   <!-- Load Reveal.js plugins -->
+   <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.3.1/plugin/notes/notes.js"></script>
+   
+   <script>
+     Reveal.initialize({
+       // Other options...
+       plugins: [ RevealNotes ]
+     });
+   </script>
+   ```
+
+3. **Using Speaker View**:
+   
+   To access speaker view during a presentation:
+   - Press the **S** key on the keyboard
+   - A new window will open with speaker view
+   - The speaker view shows:
+     - Current slide
+     - Next slide preview
+     - Speaker notes
+     - Timer
+     - Current time
+
+4. **Best Practices for Speaker Notes**:
+   
+   - Keep notes concise and focused on key talking points
+   - Include reminders for transitions or demos
+   - Add context that doesn't belong on the main slide
+   - Note potential questions and prepared answers
+   - Include timing guidelines for complex sections
+
 ### Modifying Existing Slides
 
 1. **Identify the correct module**: Find the right `.js` file in the `slides/js/slides/` directory.
@@ -241,6 +303,14 @@ export const html = `
     <li>Approach: [Brief methodology]</li>
     <li>Key findings: [Major results]</li>
   </ul>
+
+  <aside class="notes">
+    Welcome everyone to this presentation. 
+    Key points to emphasize:
+    - Our innovative approach differentiates us from competitors
+    - The methodology has been rigorously validated
+    - Findings show a 35% improvement over baseline
+  </aside>
 `;
 
 export function initialize() {
@@ -260,6 +330,13 @@ export const html = `
   <div class="chart-container" style="height: 400px; width: 80%; margin: 0 auto;">
     <canvas id="resultsChart"></canvas>
   </div>
+
+  <aside class="notes">
+    This chart shows our primary results:
+    - Notice the clear trend in Category B
+    - If asked about outliers, explain that they were validated in follow-up experiments
+    - Remind audience that detailed analysis is available in the appendix
+  </aside>
 `;
 
 export function initialize() {
@@ -328,6 +405,14 @@ def analyze_data(dataset):
         }
     return results
   </code></pre>
+
+  <aside class="notes">
+    This is the core analysis function:
+    - Highlight the efficient iteration over features
+    - The dictionary structure makes results easy to access
+    - Note that this approach scales linearly with the number of features
+    - If asked about performance, mention optimizations are in the roadmap
+  </aside>
 `;
 
 export function initialize() {
@@ -355,4 +440,5 @@ python -m http.server
 # Or using Node.js http-server
 npx http-server
 ```
-3. Open a browser and go to http://localhost:8000/slides/ to view the presentation 
+3. Open a browser and go to http://localhost:8000/slides/ to view the presentation
+4. Press 'S' during the presentation to open speaker view with notes 

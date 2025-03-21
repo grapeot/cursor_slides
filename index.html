@@ -97,6 +97,9 @@
   <!-- Load Reveal.js -->
   <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.3.1/dist/reveal.js"></script>
   
+  <!-- Load Reveal.js plugins -->
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.3.1/plugin/notes/notes.js"></script>
+  
   <!-- Load slide modules and initialize presentation -->
   <script type="module">
     import { 
@@ -119,7 +122,8 @@
       center: true,
       history: true,
       minScale: 0.2,
-      maxScale: 2.0
+      maxScale: 2.0,
+      plugins: [ RevealNotes ]
     });
     
     // Preload all slides
