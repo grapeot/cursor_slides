@@ -18,6 +18,10 @@ export const html = `
       Highlight Key Points
     </button>
   </div>
+
+  <aside class="notes">
+    This slide demonstrates the interactive highlight feature while explaining our architectural principles. When presenting, click the button to cycle through the key points. Each point represents a core architectural decision that makes this framework AI-optimized. The independent modules provide scope isolation, preventing variables from bleeding across slides. The explicit lifecycle hooks ensure proper resource management. The technical approach prioritizes predictability and consistency over simplicity, which is critical for AI-generated content.
+  </aside>
 `;
 
 // Current highlight index

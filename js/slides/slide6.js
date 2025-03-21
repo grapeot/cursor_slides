@@ -16,6 +16,10 @@ export const html = `
       </marker>
     </defs>
   </svg>
+
+  <aside class="notes">
+    This slide demonstrates a dynamic flowchart created with JavaScript. Point out how the chart automatically adjusts to the window size and how the nodes are connected with directional arrows. This is a good example of how JavaScript can create interactive diagrams that would be difficult to implement with static HTML. The flowchart shows a simple process flow with branching paths that converge back to a single path.
+  </aside>
 `;
 
 // Initialize function

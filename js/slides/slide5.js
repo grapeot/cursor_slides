@@ -21,6 +21,10 @@ export const html = `
       Toggle Rotation
     </button>
   </div>
+
+  <aside class="notes">
+    This slide demonstrates integrating advanced 3D graphics using Three.js. The cube has different colored faces and rotates automatically. During the presentation, interact with the 3D cube by dragging to rotate the view with your mouse. Use the "Reset View" button to return to the original camera position, and the "Toggle Rotation" button to pause or resume the cube's rotation. This example shows how our modular framework can handle complex WebGL content while properly managing resources and event listeners. Note the comprehensive cleanup function that prevents memory leaks.
+  </aside>
 `;
 
 // Three.js components
