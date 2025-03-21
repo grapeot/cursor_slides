@@ -193,6 +193,7 @@ Common patterns for interactive elements:
 - **Responsive Containers**: Container elements that adapt to available space
 - **Visual Hierarchy**: Clear heading structure and emphasis on key elements
 - **Progressive Reveals**: Using fragment classes for step-by-step content
+- **Default Styling**: Stick with the default CSS and font sizes unless the user explicitly specifies a need for adjustments. This ensures consistent styling across all slides and maintains the intended design language. Don't change existing font size inline styles.
 
 ### 6. Advanced Integration Examples
 
@@ -268,6 +269,85 @@ function calculateConnectionPoints(fromNode, toNode) {
   return { from: fromPoint, to: toPoint };
 }
 ```
+
+#### Dynamic Arrow Positioning (slide6.js)
+```javascript
+// Create connections between nodes
+function createConnections(container, nodes, nodeElements, connections) {
+  // Create SVG overlay for the connections
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('width', '100%');
+  svg.setAttribute('height', '100%');
+  svg.style.position = 'absolute';
+  svg.style.top = '0';
+  svg.style.left = '0';
+  
+  // Create each connection
+  connections.forEach(conn => {
+    const fromNode = nodes.find(n => n.id === conn.from);
+    const toNode = nodes.find(n => n.id === conn.to);
+    
+    // Calculate connection points on node edges
+    const points = calculateConnectionPoints(fromNode, toNode);
+    
+    // Create the path for the connection
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    
+    // Determine if we should use a straight line or curved path
+    let pathData;
+    if (Math.abs(points.from.y - points.to.y) < 20) {
+      // Straight line for nodes at similar heights
+      pathData = `M ${points.from.x},${points.from.y} L ${points.to.x},${points.to.y}`;
+    } else {
+      // Curved path for nodes at different heights
+      const midX = (points.from.x + points.to.x) / 2;
+      pathData = `M ${points.from.x},${points.from.y} 
+                 C ${midX},${points.from.y} 
+                   ${midX},${points.to.y} 
+                   ${points.to.x},${points.to.y}`;
+    }
+    
+    path.setAttribute('d', pathData);
+    path.setAttribute('marker-end', 'url(#arrowhead)');
+  });
+}
+
+function calculateConnectionPoints(fromNode, toNode) {
+  const fromHalfWidth = fromNode.width / 2;
+  const fromHalfHeight = fromNode.height / 2;
+  
+  let fromPoint = { x: 0, y: 0 };
+  let toPoint = { x: 0, y: 0 };
+  
+  // Determine edge points based on relative positions
+  if (fromNode.x < toNode.x) {
+    // From is to the left of To - connect right edge to left edge
+    fromPoint.x = fromNode.x + fromHalfWidth;  // Right edge of From
+    fromPoint.y = fromNode.y;
+    toPoint.x = toNode.x - toHalfWidth;       // Left edge of To
+    toPoint.y = toNode.y;
+  } else if (Math.abs(fromNode.x - toNode.x) < Math.abs(fromNode.y - toNode.y)) {
+    // If nodes are vertically aligned, connect top/bottom edges
+    if (fromNode.y < toNode.y) {
+      // From is above To
+      fromPoint.y = fromNode.y + fromHalfHeight;  // Bottom edge of From
+      toPoint.y = toNode.y - toHalfHeight;        // Top edge of To
+    }
+  }
+  
+  return { from: fromPoint, to: toPoint };
+}
+```
+
+When creating diagrams with arrows between elements, use SVG paths for precise positioning and visual quality. The approach above demonstrates how to:
+
+1. Calculate exact connection points based on element positions and dimensions
+2. Create appropriate paths between elements (straight or curved based on positioning)
+3. Handle different spatial relationships (horizontal, vertical, diagonal)
+4. Add proper arrow markers at path ends
+5. Update all connections when the window resizes
+
+This SVG-based approach is preferred over simpler DOM-element positioning for complex diagrams, as it provides smoother lines, better scaling, and more precise control over arrow appearance.
 
 ## Content Generation Guidelines
 
