@@ -9,7 +9,7 @@ export const html = `
   <div style="display: flex; justify-content: space-between; margin-top: 30px;">
     <div style="flex: 1; margin-right: 20px;">
       <h3 class="fragment" style="color: #4a86e8;">Problem with HTML files</h3>
-      <ul style="font-size: 0.7em;">
+      <ul>
         <li class="fragment">Global scope leads to variable collisions</li>
         <li class="fragment">No clear lifecycle management</li>
         <li class="fragment">Difficult for AI to manage large context</li>
@@ -19,7 +19,7 @@ export const html = `
     
     <div style="flex: 1;">
       <h3 class="fragment" style="color: #4a86e8;">Solution with JS modules</h3>
-      <ul style="font-size: 0.7em;">
+      <ul>
         <li class="fragment">Each slide has proper scope isolation</li>
         <li class="fragment">Explicit initialize() and cleanup() hooks</li>
         <li class="fragment">Each module is an isolated unit for AI</li>
