@@ -9,6 +9,9 @@
   --code-bg-color: #272822;
   --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   --font-family: 'Source Sans Pro', Helvetica, sans-serif;
+  
+  /* Override reveal.js heading text transform */
+  --r-heading-text-transform: capitalize !important;
 }
 
 body {
