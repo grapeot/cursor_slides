@@ -66,13 +66,7 @@
   <div class="reveal">
     <div class="slides">
       <!-- Title Slide -->
-      <section>
-        <h1>SlidePilot</h1>
-        <p>Using Reveal.js with ES Modules</p>
-        <p style="margin-top: 30px;">
-          <a href="https://github.com/grapeot/cursor_slides" target="_blank">https://github.com/grapeot/cursor_slides</a>
-        </p>
-      </section>
+      <section id="title"></section>
       
       <!-- Slide 1 - Simple text content -->
       <section id="slide1"></section>
@@ -111,7 +105,7 @@
     } from './js/slideModule.js';
     
     // All slide IDs in order
-    const slideIds = ['slide1', 'slide2', 'slide3', 'slide4', 'slide5', 'slide6'];
+    const slideIds = ['title', 'slide1', 'slide2', 'slide3', 'slide4', 'slide5', 'slide6'];
     
     // Track current slide
     let currentSlideId = null;
@@ -140,19 +134,18 @@
       
       // Initialize the current slide on load
       const currentIndex = Reveal.getIndices().h;
-      if (currentIndex > 0 && currentIndex <= slideIds.length) {
-        currentSlideId = slideIds[currentIndex - 1]; // Adjust for title slide
+      if (currentIndex >= 0 && currentIndex < slideIds.length) {
+        currentSlideId = slideIds[currentIndex];
         initializeSlide(currentSlideId);
       }
     });
-    
+
     // Handle slide changes
     Reveal.addEventListener('slidechanged', function(event) {
       const indices = Reveal.getIndices();
       
-      // Skip title slide (index 0)
-      if (indices.h > 0 && indices.h <= slideIds.length) {
-        const newSlideId = slideIds[indices.h - 1]; // Adjust for title slide
+      if (indices.h >= 0 && indices.h < slideIds.length) {
+        const newSlideId = slideIds[indices.h];
         
         // Clean up previous slide
         if (currentSlideId && currentSlideId !== newSlideId) {
