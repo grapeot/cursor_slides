@@ -26,7 +26,23 @@ cp -r /tmp/slidepilot/index.html /tmp/slidepilot/js /tmp/slidepilot/css slides/
 rm -rf /tmp/slidepilot
 ```
 
-5. Modify slides/index.html to update the title and any project-specific configuration.
+5. Update `slides/js/slides/title.js` with your project title, subtitle, or link. If you need extra cover elements, adjust the `<section id="title">` container in `slides/index.html`.
+
+## First-Time Guidance
+
+When you detect that a user is new to SlidePilot (for example, no existing `slides/` directory or a direct request for help), walk them through a short onboarding prompt. Offer at least these options and wait for their choice:
+
+- "Show me how to preview and present the deck"
+- "Teach me how to configure the environment and dependencies"
+- "I'm good for now"
+
+After the user makes a selection, guide them to the relevant section:
+
+- For previewing and presenting, reference the **Running the Presentation** section.
+- For environment setup, revisit the **Setup Process** steps and highlight any required tooling.
+- If they decline, confirm you'll stay available for clarifications and proceed with the requested task.
+
+Make the invitation conversational, e.g. *"Would you like a quick tour on previewing the deck or setting up the environment? I can help with either—or we can dive straight into building slides."* Repeat the onboarding offer sparingly (only when the user appears unfamiliar) to avoid interruption.
 
 ## Directory Structure
 
@@ -40,6 +56,7 @@ slides/
 └── js/
     ├── slideModule.js   # Core module system
     └── slides/          # Individual slide modules
+        ├── title.js     # Title slide content and lifecycle hooks
         ├── slide1.js    # Simple text content
         ├── slide2.js    # Interactive content
         └── ...          # Additional slides
@@ -62,7 +79,7 @@ slides/
 
 4. **Implement proper cleanup**: Release all resources (event listeners, timers, WebGL contexts, etc.) in the cleanup function.
 
-5. **Add to index.html**: Add a corresponding empty section tag `<section id="productDemo"></section>` and update the `slideIds` array.
+5. **Add to index.html**: Add a corresponding empty section tag `<section id="productDemo"></section>` and append `productDemo` to the end of the `slideIds` array. Keep the existing `title` entry as the first item and retain the `<section id="title">` container for the cover slide.
 
 ### Working with Speaker Notes
 
@@ -206,16 +223,16 @@ let myChart = null;
 
 export function initialize() {
   // Initialize chart
-  const ctx = document.getElementById('myChart').getContext('2d');
+  const ctx = document.getElementById('resultsChart').getContext('2d');
   myChart = new Chart(ctx, config);
   
   // Add update functionality
-  document.getElementById('updateBtn').addEventListener('click', updateChart);
+  document.getElementById('updateChartBtn').addEventListener('click', updateChart);
 }
 
 export function cleanup() {
   // Remove event listeners
-  document.getElementById('updateBtn').removeEventListener('click', updateChart);
+  document.getElementById('updateChartBtn').removeEventListener('click', updateChart);
   
   // Destroy chart
   if (myChart) {
