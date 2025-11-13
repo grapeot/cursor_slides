@@ -18,7 +18,7 @@ mkdir -p slides
 
 3. Copy only the necessary files:
 ```bash
-cp -r /tmp/slidepilot/index.html /tmp/slidepilot/js /tmp/slidepilot/css slides/
+cp -r /tmp/slidepilot/index.html /tmp/slidepilot/js /tmp/slidepilot/css /tmp/slidepilot/start-server.py /tmp/slidepilot/requirements.txt slides/
 ```
 
 4. Clean up the temporary files:
@@ -528,14 +528,32 @@ export function cleanup() {
 
 After setup, instruct the user to:
 
-1. Navigate to the project directory in a terminal
-2. Start a local web server:
+1. Navigate to the slides directory in a terminal
+2. Set up the Python environment (if not already done):
 ```bash
-# Using Python's HTTP server
-python -m http.server
+# Create virtual environment using uv (recommended)
+uv venv
 
-# Or using Node.js http-server
-npx http-server
+# Activate the virtual environment
+source .venv/bin/activate  # On macOS/Linux
+# or
+.venv\Scripts\activate  # On Windows
+
+# Install dependencies
+uv pip install -r requirements.txt
 ```
-3. Open a browser and go to http://localhost:8000/slides/ to view the presentation
-4. Press 'S' during the presentation to open speaker view with notes 
+
+3. Start the development server with live reload:
+```bash
+# Start the server (default port 8000)
+python start-server.py
+
+# Or specify a custom port
+python start-server.py -p 8001
+```
+
+4. The server will automatically open your browser. Any changes you make to HTML, CSS, or JavaScript files will automatically refresh in the browser - no manual refresh needed!
+
+5. Press 'S' during the presentation to open speaker view with notes
+
+**Note**: The live reload feature is non-intrusive - it only injects JavaScript at runtime when accessed through the development server. Your source files remain unchanged. 
