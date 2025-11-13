@@ -22,6 +22,25 @@ Then ask your assistant to "Create a presentation for my current project" or sim
 
 Or you can also manually clone the repo and `@AI-instructions.md` for a more flexible workflow.
 
+### Running the Development Server
+
+To start the development server with live reload:
+
+```bash
+# Activate the virtual environment (if using uv)
+source .venv/bin/activate
+
+# Start the server
+python start-server.py
+
+# Or specify a custom port
+python start-server.py -p 8001
+```
+
+The server includes **live reload** functionality - any changes you make to HTML, CSS, or JavaScript files will automatically refresh in your browser. No manual refresh needed!
+
+**Note**: The live reload feature is non-intrusive - it only injects JavaScript at runtime when accessed through the development server. Your source files remain unchanged.
+
 ## Designed for AI, Not Humans
 
 This framework represents a fundamental shift in presentation design philosophy. Unlike traditional slide frameworks that prioritize human-authored content, our architecture is specifically optimized for AI-generated presentations.
