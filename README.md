@@ -1,3 +1,11 @@
+# Deprecated: use `presentation_skill`
+
+This repository has been superseded by [presentation_skill](https://github.com/grapeot/presentation_skill), which consolidates the HTML module deck workflow from `cursor_slides` and the image-generated deck workflow from `nbp_slides` into one public AI-agent skill.
+
+Use `presentation_skill` for new presentation deck work. This repository remains available as historical reference for the older SlidePilot HTML module implementation.
+
+---
+
 # SlidePilot
 
 A modern approach to presentation slides using ES Modules and Reveal.js, specifically designed for AI-assisted development.
